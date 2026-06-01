@@ -13,11 +13,11 @@ export default defineConfig({
     port: 5174,
     proxy: {
       '/api': {
-        target: 'https://api.amberlumia.com.vn',
+        target: 'http://api.amberlumia.com.vn',
         changeOrigin: true,
       },
       '/uploads': {
-        target: 'https://api.amberlumia.com.vn',
+        target: 'http://api.amberlumia.com.vn',
         changeOrigin: true,
       },
     },

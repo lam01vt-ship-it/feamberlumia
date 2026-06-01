@@ -105,6 +105,7 @@
 
 .tosix-header-main {
   position: relative;
+  z-index: 20;
   background: linear-gradient(180deg, #fffcf8 0%, #f8f2ea 100%);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(139, 90, 43, 0.1);
@@ -1716,8 +1717,9 @@
 .tosix-check,
 .tosix-check-row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: 8px 16px;
 }
 
 .tosix-check-row {
@@ -1839,6 +1841,7 @@
 
 .tosix-admin-main {
   padding: 24px;
+  min-width: 0;
 }
 
 .tosix-admin-page h1 {
@@ -2671,6 +2674,9 @@
     background: rgba(255, 255, 255, 0.98);
     border-bottom: 1px solid var(--tosix-border);
     box-shadow: var(--tosix-shadow);
+    max-height: calc(100vh - 60px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .tosix-nav--open {
@@ -2883,6 +2889,11 @@
     grid-template-columns: 1fr;
   }
 
+  .tosix-category-tabs--scroll {
+    flex-wrap: wrap;
+    overflow-x: visible;
+  }
+
   .tosix-category-tabs--scroll .tosix-chip {
     flex-shrink: 0;
   }
@@ -2913,7 +2924,7 @@
   }
 
   .tosix-admin {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .tosix-admin-topbar {
@@ -3200,17 +3211,30 @@
     padding: 12px;
   }
 
+  .tosix-form {
+    padding: 16px;
+  }
+
+  .tosix-form-grid {
+    grid-template-columns: 1fr;
+  }
+
   .tosix-admin-toolbar {
     flex-direction: column;
     align-items: stretch;
+    gap: 10px;
   }
 
   .tosix-admin-toolbar .tosix-search-bar {
+    flex: 0 0 auto;
     max-width: none;
+    width: 100%;
+    margin-bottom: 0;
   }
 
   .tosix-admin-filter {
-    flex: 1 1 auto;
+    flex: 0 0 auto;
+    width: 100%;
   }
 
   .tosix-home-carousel-page--products,
