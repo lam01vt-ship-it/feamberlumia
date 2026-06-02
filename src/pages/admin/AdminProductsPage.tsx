@@ -6,7 +6,7 @@ import { Pagination } from '../../components/Pagination'
 import { ProductImagesField } from '../../components/ProductImagesField'
 import { ProductSearchBar } from '../../components/ProductSearchBar'
 import type { Category, Product, ProductInput } from '../../types/api'
-import { formatProductPrice, imageUrl } from '../../utils/format'
+import { formatProductPriceRange, imageUrl } from '../../utils/format'
 import { flagsFromStockType, stockTypeFromFlags } from '../../utils/productStock'
 
 const empty: ProductInput = {
@@ -14,6 +14,7 @@ const empty: ProductInput = {
   code: '',
   name: '',
   price: 0,
+  priceMax: 0,
   imagePaths: [],
   isNew: false,
   isFeatured: false,
@@ -93,6 +94,7 @@ export function AdminProductsPage() {
         code: detail.product.code,
         name: detail.product.name,
         price: detail.product.price,
+        priceMax: detail.product.priceMax,
         imagePaths: detail.imagePaths,
         isNew: detail.product.isNew,
         isFeatured: detail.product.isFeatured,
@@ -126,6 +128,11 @@ export function AdminProductsPage() {
 
     if (form.imagePaths.length === 0) {
       setError('Vui lòng thêm ít nhất 1 ảnh cho sản phẩm.')
+      return
+    }
+
+    if (form.priceMax > 0 && form.priceMax < form.price) {
+      setError('Giá đến phải lớn hơn hoặc bằng giá từ.')
       return
     }
 
@@ -220,8 +227,19 @@ export function AdminProductsPage() {
             <input className="tosix-input" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
           </label>
           <label className="tosix-field">
-            Giá (VNĐ)
-            <input className="tosix-input" type="number" value={form.price} onChange={(e) => setForm({ ...form, price: Number(e.target.value) })} required />
+            Giá từ (VNĐ)
+            <input className="tosix-input" type="number" min={0} value={form.price} onChange={(e) => setForm({ ...form, price: Number(e.target.value) })} required />
+          </label>
+          <label className="tosix-field">
+            Giá đến (VNĐ)
+            <input
+              className="tosix-input"
+              type="number"
+              min={0}
+              value={form.priceMax}
+              onChange={(e) => setForm({ ...form, priceMax: Number(e.target.value) })}
+              placeholder="Để 0 nếu chỉ 1 giá"
+            />
           </label>
           <label className="tosix-field">
             Thứ tự (order)
@@ -312,7 +330,7 @@ export function AdminProductsPage() {
           </thead>
           <tbody>
             {rows.map((r) => {
-              const priceLabel = formatProductPrice(r.price)
+              const priceLabel = formatProductPriceRange(r.price, r.priceMax)
               const isEditing = editId === r.id
               return (
                 <tr

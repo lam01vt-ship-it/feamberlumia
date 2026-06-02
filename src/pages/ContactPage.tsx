@@ -6,6 +6,7 @@ import { SiteFooter } from '../components/SiteFooter'
 import { ZaloIcon } from '../components/ZaloIcon'
 import { brandName } from '../utils/brand'
 import { resolveZaloUrl } from '../utils/zalo'
+import { imageUrl } from '../utils/format'
 
 export function ContactPage() {
   const [settings, setSettings] = useState<SiteSetting | null>(null)
@@ -82,6 +83,17 @@ export function ContactPage() {
               </div>
             ) : null}
           </div>
+          {settings.zaloQrImagePath ? (
+            <div className="tosix-contact-qr">
+              <a href={zaloHref} target="_blank" rel="noreferrer" className="tosix-contact-qr-image">
+                <img src={imageUrl(settings.zaloQrImagePath)} alt={`Mã QR Zalo ${brandName(settings)}`} loading="lazy" />
+              </a>
+              <p className="tosix-contact-qr-hint">
+                <ZaloIcon size={18} /> Mở Zalo và quét mã để kết bạn &amp; nhận tư vấn
+              </p>
+            </div>
+          ) : null}
+
           <div className="tosix-contact-actions">
             <a href={zaloHref} target="_blank" rel="noreferrer" className="tosix-btn tosix-btn--zalo">
               <ZaloIcon size={18} /> Chat Zalo

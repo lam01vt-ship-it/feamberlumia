@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import * as tosixApi from '../../api/tosixApi'
 import { messageFromApiError } from '../../api/apiError'
 import { useAdminToast } from '../../components/AdminToast'
+import { ImageUploadField } from '../../components/ImageUploadField'
 import type { SiteSetting } from '../../types/api'
 
 type SettingsForm = {
@@ -17,6 +18,7 @@ const empty: SettingsForm = {
   phoneSecondary: '',
   facebookUrl: '',
   zaloUrl: '',
+  zaloQrImagePath: '',
   siteTitle: '',
   siteTagline: '',
   heroEyebrow: '',
@@ -33,6 +35,7 @@ const nullableKeys = new Set<keyof SettingsForm>([
   'phoneSecondary',
   'facebookUrl',
   'zaloUrl',
+  'zaloQrImagePath',
   'siteTitle',
   'siteTagline',
   'heroEyebrow',
@@ -61,6 +64,7 @@ export function AdminSettingsPage() {
       phoneSecondary: s.phoneSecondary ?? '',
       facebookUrl: s.facebookUrl ?? '',
       zaloUrl: s.zaloUrl ?? '',
+      zaloQrImagePath: s.zaloQrImagePath ?? '',
       siteTitle: s.siteTitle ?? '',
       siteTagline: s.siteTagline ?? '',
       heroEyebrow: s.heroEyebrow ?? '',
@@ -154,6 +158,20 @@ export function AdminSettingsPage() {
               <input className="tosix-input" value={form[key] ?? ''} onChange={(e) => setForm({ ...form, [key]: e.target.value })} />
             </label>
           ))}
+        </div>
+
+        <div className="tosix-form-grid">
+          <div className="tosix-field tosix-field--wide">
+            <ImageUploadField
+              label="Mã QR Zalo (khách quét để kết bạn / tư vấn)"
+              value={form.zaloQrImagePath || null}
+              folder="settings"
+              onChange={(path) => setForm({ ...form, zaloQrImagePath: path })}
+            />
+            <p className="tosix-muted tosix-admin-form-hint-block">
+              Tải ảnh mã QR Zalo (danh thiếp Zalo). Ảnh sẽ hiển thị ở chân trang và trang Liên hệ để khách quét.
+            </p>
+          </div>
         </div>
 
         {error ? <p className="tosix-alert">{error}</p> : null}

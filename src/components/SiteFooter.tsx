@@ -3,6 +3,7 @@ import type { SiteSetting } from '../types/api'
 import { mapsDirectionsUrl, mapsEmbedUrl } from '../utils/maps'
 import { brandInitial, brandName } from '../utils/brand'
 import { resolveZaloUrl } from '../utils/zalo'
+import { imageUrl } from '../utils/format'
 import { ZaloIcon } from './ZaloIcon'
 
 type SiteFooterProps = {
@@ -89,6 +90,16 @@ export function SiteFooter({ settings }: SiteFooterProps) {
           </div>
 
           <div className="tosix-footer-aside">
+            {settings.zaloQrImagePath ? (
+              <div className="tosix-footer-qr-card">
+                <h3>Quét mã Zalo</h3>
+                <a href={zaloHref} target="_blank" rel="noreferrer" className="tosix-footer-qr">
+                  <img src={imageUrl(settings.zaloQrImagePath)} alt={`Mã QR Zalo ${brand}`} loading="lazy" />
+                </a>
+                <p className="tosix-footer-qr-hint">Dùng Zalo quét mã để kết bạn &amp; tư vấn nhanh</p>
+              </div>
+            ) : null}
+
             <div className="tosix-footer-links-card">
               <h3>Liên kết nhanh</h3>
               <Link to="/san-pham">Tất cả sản phẩm</Link>

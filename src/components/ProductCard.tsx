@@ -1,5 +1,5 @@
 import type { Product } from '../types/api'
-import { formatProductPrice, imageUrl } from '../utils/format'
+import { formatProductPriceRange, imageUrl } from '../utils/format'
 import { productStockLabel, productStockShortDisplay } from '../utils/productStock'
 
 type ProductCardProps = {
@@ -8,7 +8,7 @@ type ProductCardProps = {
 }
 
 export function ProductCard({ product, onView }: ProductCardProps) {
-  const priceLabel = formatProductPrice(product.price)
+  const priceLabel = formatProductPriceRange(product.price, product.priceMax)
   const stockType = productStockLabel(product)
 
   return (

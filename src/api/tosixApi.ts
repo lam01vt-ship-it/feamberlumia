@@ -222,5 +222,6 @@ function buildProductParams(params: ProductListParams) {
   if (params.page) query.page = params.page
   if (params.pageSize) query.pageSize = params.pageSize
   if (params.categoryId) query.categoryId = params.categoryId
+  if (params.sort && params.sort !== 'default') query.sort = params.sort
   return query
 }

@@ -12,7 +12,9 @@ import { ProductDetailModal } from '../components/ProductDetailModal'
 
 import { ProductSearchBar } from '../components/ProductSearchBar'
 
-import type { Category, Product } from '../types/api'
+import { ProductSortBar, parseSort } from '../components/ProductSortBar'
+
+import type { Category, Product, ProductSort } from '../types/api'
 
 import { SiteFooter } from '../components/SiteFooter'
 import { brandName } from '../utils/brand'
@@ -20,6 +22,18 @@ import { brandName } from '../utils/brand'
 
 
 const PAGE_SIZE = 24
+
+function changeSort(
+  next: ProductSort,
+  searchParams: URLSearchParams,
+  setSearchParams: (params: URLSearchParams) => void,
+) {
+  const params = new URLSearchParams(searchParams)
+  if (next === 'default') params.delete('sort')
+  else params.set('sort', next)
+  params.set('page', '1')
+  setSearchParams(params)
+}
 
 
 
@@ -30,6 +44,8 @@ export function AllProductsPage() {
   const q = searchParams.get('q') ?? ''
 
   const page = Math.max(1, Number(searchParams.get('page') ?? '1') || 1)
+
+  const sort = parseSort(searchParams.get('sort'))
 
 
 
@@ -61,7 +77,7 @@ export function AllProductsPage() {
     setLoading(true)
     try {
       const [result, c] = await Promise.all([
-        tosixApi.fetchAllProducts({ q: q || undefined, page, pageSize: PAGE_SIZE }),
+        tosixApi.fetchAllProducts({ q: q || undefined, page, pageSize: PAGE_SIZE, sort }),
         tosixApi.fetchCategories(),
       ])
       setProducts(result.items)
@@ -71,7 +87,7 @@ export function AllProductsPage() {
     } finally {
       setLoading(false)
     }
-  }, [q, page])
+  }, [q, page, sort])
 
 
 
@@ -138,6 +154,10 @@ export function AllProductsPage() {
 
 
 
+      <ProductSortBar totalCount={totalCount} sort={sort} onSortChange={(next) => changeSort(next, searchParams, setSearchParams)} />
+
+
+
       {loading ? <p className="tosix-muted">Đang tải sản phẩm…</p> : null}
 
       {!loading && products.length === 0 ? (
@@ -184,6 +204,8 @@ export function CategoryProductsPage() {
 
   const page = Math.max(1, Number(searchParams.get('page') ?? '1') || 1)
 
+  const sort = parseSort(searchParams.get('sort'))
+
 
 
   const [draftQ, setDraftQ] = useState(q)
@@ -218,7 +240,7 @@ export function CategoryProductsPage() {
 
       try {
 
-        const result = await tosixApi.fetchProductsByCategory(slug, { q: q || undefined, page, pageSize: PAGE_SIZE })
+        const result = await tosixApi.fetchProductsByCategory(slug, { q: q || undefined, page, pageSize: PAGE_SIZE, sort })
 
         setProducts(result.items)
 
@@ -236,7 +258,7 @@ export function CategoryProductsPage() {
 
     })()
 
-  }, [slug, q, page])
+  }, [slug, q, page, sort])
 
 
 
@@ -270,6 +292,10 @@ export function CategoryProductsPage() {
     <PageShell title={title} subtitle="Tìm trong danh mục này hoặc xem chi tiết từng sản phẩm">
 
       <ProductSearchBar value={draftQ} onChange={setDraftQ} onSearch={commitSearch} />
+
+
+
+      <ProductSortBar totalCount={totalCount} sort={sort} onSortChange={(next) => changeSort(next, searchParams, setSearchParams)} />
 
 
 

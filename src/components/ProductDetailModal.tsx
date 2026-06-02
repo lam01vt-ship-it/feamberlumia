@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import * as tosixApi from '../api/tosixApi'
 import type { Product, ProductDetail } from '../types/api'
-import { formatProductPrice, imageUrl } from '../utils/format'
+import { formatProductPriceRange, imageUrl } from '../utils/format'
 import { productStockDisplay, productStockLabel } from '../utils/productStock'
 
 type ProductDetailModalProps = {
@@ -57,7 +57,7 @@ export function ProductDetailModal({ productId, onClose }: ProductDetailModalPro
   const product = detail?.product
   const images = detail?.imagePaths ?? (product?.imagePath ? [product.imagePath] : [])
   const currentImage = images[imageIndex]
-  const priceLabel = product ? formatProductPrice(product.price) : null
+  const priceLabel = product ? formatProductPriceRange(product.price, product.priceMax) : null
   const stockType = product ? productStockLabel(product) : null
 
   return (
@@ -177,7 +177,7 @@ export function ProductDetailModal({ productId, onClose }: ProductDetailModalPro
 }
 
 function RelatedProductCard({ product, onOpen }: { product: Product; onOpen: (id: string) => void }) {
-  const priceLabel = formatProductPrice(product.price)
+  const priceLabel = formatProductPriceRange(product.price, product.priceMax)
 
   return (
     <button type="button" className="tosix-related-card" onClick={() => onOpen(product.id)}>

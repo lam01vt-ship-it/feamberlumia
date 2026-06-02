@@ -3574,3 +3574,117 @@
     height: 300px;
   }
 }
+
+/* ===== Product list sort toolbar ===== */
+.tosix-product-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 18px 0 22px;
+}
+
+.tosix-product-toolbar-count {
+  color: var(--tosix-muted);
+  font-size: 0.95rem;
+}
+
+.tosix-product-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+}
+
+.tosix-product-sort-label {
+  color: var(--tosix-muted);
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.tosix-product-sort-select {
+  min-width: 210px;
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .tosix-product-sort {
+    width: 100%;
+  }
+
+  .tosix-product-sort-select {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+/* ===== Zalo QR (footer + contact) ===== */
+.tosix-footer-qr-card {
+  background: var(--tosix-surface);
+  border: 1px solid var(--tosix-border);
+  border-radius: var(--tosix-radius);
+  padding: 18px;
+  text-align: center;
+  box-shadow: var(--tosix-shadow);
+}
+
+.tosix-footer-qr-card h3 {
+  margin: 0 0 12px;
+  color: var(--tosix-primary);
+}
+
+.tosix-footer-qr {
+  display: inline-block;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+  line-height: 0;
+}
+
+.tosix-footer-qr img {
+  width: 160px;
+  height: 160px;
+  object-fit: contain;
+  display: block;
+}
+
+.tosix-footer-qr-hint {
+  margin: 12px 0 0;
+  color: var(--tosix-muted);
+  font-size: 0.85rem;
+}
+
+.tosix-contact-qr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin: 24px 0 8px;
+}
+
+.tosix-contact-qr-image {
+  display: inline-block;
+  border: 1px solid var(--tosix-border);
+  border-radius: 14px;
+  padding: 10px;
+  background: #fff;
+  line-height: 0;
+  box-shadow: var(--tosix-shadow);
+}
+
+.tosix-contact-qr-image img {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+  display: block;
+}
+
+.tosix-contact-qr-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--tosix-muted);
+  font-size: 0.9rem;
+}

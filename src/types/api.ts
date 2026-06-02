@@ -37,6 +37,7 @@ export type SiteSetting = {
   phoneSecondary: string | null
   facebookUrl: string | null
   zaloUrl: string | null
+  zaloQrImagePath: string | null
   siteTitle: string | null
   siteTagline: string | null
   heroEyebrow: string | null
@@ -66,6 +67,7 @@ export type Product = {
   code: string
   name: string
   price: number
+  priceMax: number
   imagePath: string | null
   isNew: boolean
   isFeatured: boolean
@@ -82,6 +84,7 @@ export type ProductInput = {
   code: string
   name: string
   price: number
+  priceMax: number
   imagePaths: string[]
   isNew: boolean
   isFeatured: boolean
@@ -111,11 +114,14 @@ export type PagedResult<T> = {
   totalPages: number
 }
 
+export type ProductSort = 'default' | 'popular' | 'latest' | 'price_asc' | 'price_desc'
+
 export type ProductListParams = {
   q?: string
   page?: number
   pageSize?: number
   categoryId?: string
+  sort?: ProductSort
 }
 
 export type Banner = {
