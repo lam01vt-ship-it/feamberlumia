@@ -5,6 +5,7 @@ import { PublicLayout } from './layout/PublicLayout'
 import { ContactPage } from './pages/ContactPage'
 import { HomePage } from './pages/HomePage'
 import { LoginPage } from './pages/LoginPage'
+import { PolicyPage } from './pages/PolicyPage'
 import { AllProductsPage, CategoryProductsPage } from './pages/ProductsPage'
 import { AdminAccountPage } from './pages/admin/AdminAccountPage'
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage'
@@ -24,6 +25,7 @@ export default function App() {
             <Route path="san-pham" element={<AllProductsPage />} />
             <Route path="danh-muc/:slug" element={<CategoryProductsPage />} />
             <Route path="lien-he" element={<ContactPage />} />
+            <Route path="chinh-sach" element={<PolicyPage />} />
           </Route>
           <Route path="/login" element={<LoginPage />} />
           <Route

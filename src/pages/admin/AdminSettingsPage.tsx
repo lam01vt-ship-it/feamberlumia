@@ -29,6 +29,7 @@ const empty: SettingsForm = {
   trust2Text: '',
   trust3Title: '',
   trust3Text: '',
+  policyContent: '',
 }
 
 const nullableKeys = new Set<keyof SettingsForm>([
@@ -46,6 +47,7 @@ const nullableKeys = new Set<keyof SettingsForm>([
   'trust2Text',
   'trust3Title',
   'trust3Text',
+  'policyContent',
 ])
 
 export function AdminSettingsPage() {
@@ -75,6 +77,7 @@ export function AdminSettingsPage() {
       trust2Text: s.trust2Text ?? '',
       trust3Title: s.trust3Title ?? '',
       trust3Text: s.trust3Text ?? '',
+      policyContent: s.policyContent ?? '',
     })
   }, [])
 
@@ -172,6 +175,25 @@ export function AdminSettingsPage() {
               Tải ảnh mã QR Zalo (danh thiếp Zalo). Ảnh sẽ hiển thị ở chân trang và trang Liên hệ để khách quét.
             </p>
           </div>
+        </div>
+
+        <h2 className="tosix-admin-form-section">Chính sách đổi trả &amp; bảo hành</h2>
+        <p className="tosix-muted tosix-admin-form-hint-block">
+          Nội dung hiển thị tại trang <strong>/chinh-sach</strong>. Cú pháp đơn giản: dòng bắt đầu bằng{' '}
+          <code>##</code> là tiêu đề một mục; dòng bắt đầu bằng <code>-</code> là một gạch đầu dòng; dòng
+          thường là đoạn văn. Để trống sẽ dùng nội dung mặc định.
+        </p>
+        <div className="tosix-form-grid">
+          <label className="tosix-field tosix-field--wide">
+            Nội dung chính sách
+            <textarea
+              className="tosix-input tosix-textarea"
+              rows={18}
+              value={form.policyContent}
+              onChange={(e) => setForm({ ...form, policyContent: e.target.value })}
+              placeholder={'## Đổi sản phẩm\n- Thời gian: Trong vòng 3 ngày...\n- Điều kiện: ...'}
+            />
+          </label>
         </div>
 
         {error ? <p className="tosix-alert">{error}</p> : null}

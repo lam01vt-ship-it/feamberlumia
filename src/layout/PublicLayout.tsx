@@ -147,6 +147,9 @@ export function PublicLayout() {
                 Trang chủ
               </Link>
               <ProductsNavDropdown categories={categories} onNavigate={closeMenu} />
+              <Link to="/chinh-sach" onClick={closeMenu}>
+                Chính sách
+              </Link>
               <Link to="/lien-he" onClick={closeMenu}>
                 Liên hệ
               </Link>

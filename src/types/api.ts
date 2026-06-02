@@ -48,6 +48,7 @@ export type SiteSetting = {
   trust2Text: string | null
   trust3Title: string | null
   trust3Text: string | null
+  policyContent: string | null
 }
 
 export type Category = {

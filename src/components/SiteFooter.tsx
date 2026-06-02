@@ -103,6 +103,7 @@ export function SiteFooter({ settings }: SiteFooterProps) {
             <div className="tosix-footer-links-card">
               <h3>Liên kết nhanh</h3>
               <Link to="/san-pham">Tất cả sản phẩm</Link>
+              <Link to="/chinh-sach">Chính sách đổi trả & bảo hành</Link>
               <Link to="/lien-he">Liên hệ & tư vấn</Link>
               {settings.facebookUrl ? (
                 <a href={settings.facebookUrl} target="_blank" rel="noreferrer">
