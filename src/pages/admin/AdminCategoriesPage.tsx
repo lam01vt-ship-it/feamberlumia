@@ -101,6 +101,9 @@ export function AdminCategoriesPage() {
         setError(null)
         try {
           await tosixApi.adminBulkHideCategories(selectedIds)
+          if (editId && selectedIds.includes(editId)) {
+            resetForm()
+          }
           setSelectedIds([])
           await load()
           showSuccess('Ẩn thành công.')
@@ -119,6 +122,9 @@ export function AdminCategoriesPage() {
         setError(null)
         try {
           await tosixApi.adminBulkDeleteCategories(selectedIds)
+          if (editId && selectedIds.includes(editId)) {
+            resetForm()
+          }
           setSelectedIds([])
           await load()
           showSuccess('Xóa thành công.')
@@ -215,6 +221,7 @@ export function AdminCategoriesPage() {
               <tr
                 key={r.id}
                 className={`tosix-table-row--clickable${editId === r.id ? ' tosix-table-row--active' : ''}`}
+                style={!r.isActive ? { opacity: 0.5 } : undefined}
                 onClick={() => startEdit(r)}
                 title={`Sửa ${r.name}`}
               >
@@ -238,7 +245,14 @@ export function AdminCategoriesPage() {
                     <span className="tosix-table-thumb-empty">—</span>
                   )}
                 </td>
-                <td>{r.name}</td>
+                <td>
+                  {r.name}
+                  {!r.isActive && (
+                    <span className="tosix-muted" style={{ fontSize: '0.8rem', marginLeft: '6px', fontStyle: 'italic' }}>
+                      (Ẩn)
+                    </span>
+                  )}
+                </td>
                 <td>{r.slug}</td>
                 <td>{r.productCount}</td>
                 <td>{r.sortOrder}</td>
