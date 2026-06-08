@@ -1332,18 +1332,11 @@
   flex-wrap: wrap;
   gap: 8px;
   margin-bottom: 24px;
+  width: 100%;
 }
 
-.tosix-category-tabs--scroll {
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  padding-bottom: 4px;
-}
-
-.tosix-category-tabs--scroll::-webkit-scrollbar {
-  display: none;
+.tosix-category-tabs .tosix-chip {
+  flex-shrink: 0;
 }
 
 .tosix-chip {
@@ -2896,15 +2889,6 @@
     grid-template-columns: 1fr;
   }
 
-  .tosix-category-tabs--scroll {
-    flex-wrap: wrap;
-    overflow-x: visible;
-  }
-
-  .tosix-category-tabs--scroll .tosix-chip {
-    flex-shrink: 0;
-  }
-
   .tosix-btn {
     min-height: 44px;
     padding: 12px 16px;
@@ -3804,3 +3788,28 @@
   flex-wrap: wrap;
   gap: 12px;
 }
+
+/* ── Bulk Actions ────────────────────────────────────────── */
+.tosix-admin-bulk-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--tosix-surface);
+  border: 1px solid var(--tosix-border);
+  border-radius: var(--tosix-radius);
+  padding: 12px 20px;
+  margin-bottom: 16px;
+  animation: tosix-fade-up 0.2s ease;
+}
+
+.tosix-admin-bulk-actions-text {
+  font-size: 0.95rem;
+  color: var(--tosix-text);
+  margin-right: auto;
+}
+
+.tosix-admin-bulk-actions-btns {
+  display: flex;
+  gap: 8px;
+}
+

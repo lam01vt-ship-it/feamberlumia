@@ -216,6 +216,22 @@ export async function adminUpload(file: File, folder: string): Promise<UploadRes
   return data
 }
 
+export async function adminBulkDeleteCategories(ids: string[]): Promise<void> {
+  await api.post('/api/admin/categories/bulk-delete', { ids })
+}
+
+export async function adminBulkHideCategories(ids: string[]): Promise<void> {
+  await api.post('/api/admin/categories/bulk-hide', { ids })
+}
+
+export async function adminBulkDeleteProducts(ids: string[]): Promise<void> {
+  await api.post('/api/admin/products/bulk-delete', { ids })
+}
+
+export async function adminBulkHideProducts(ids: string[]): Promise<void> {
+  await api.post('/api/admin/products/bulk-hide', { ids })
+}
+
 function buildProductParams(params: ProductListParams) {
   const query: Record<string, string | number> = {}
   if (params.q?.trim()) query.q = params.q.trim()

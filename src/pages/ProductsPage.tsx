@@ -138,7 +138,7 @@ export function AllProductsPage() {
 
 
 
-      <div className="tosix-category-tabs tosix-category-tabs--scroll">
+      <div className="tosix-category-tabs">
 
         {categories.map((c) => (
 

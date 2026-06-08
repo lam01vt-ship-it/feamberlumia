@@ -42,6 +42,12 @@ export function AdminProductsPage() {
   const [totalCount, setTotalCount] = useState(0)
   const [loading, setLoading] = useState(true)
   const [loadingEdit, setLoadingEdit] = useState(false)
+  const [selectedIds, setSelectedIds] = useState<string[]>([])
+  const [confirmModal, setConfirmModal] = useState<{
+    title: string
+    message: string
+    onConfirm: () => void | Promise<void>
+  } | null>(null)
 
   const loadCategories = useCallback(async () => {
     const c = await tosixApi.adminListCategories()
@@ -62,10 +68,12 @@ export function AdminProductsPage() {
       setRows(result.items)
       setTotalPages(result.totalPages)
       setTotalCount(result.totalCount)
+      setSelectedIds([])
     } catch (err) {
       setRows([])
       setTotalPages(0)
       setTotalCount(0)
+      setSelectedIds([])
       setError(messageFromApiError(err, 'Không tải được danh sách sản phẩm.'))
     } finally {
       setLoading(false)
@@ -146,26 +154,70 @@ export function AdminProductsPage() {
         await tosixApi.adminUpdateProduct(editId, payload)
         await loadProducts()
         showSuccess()
+        setSelectedIds([])
       } else {
         await tosixApi.adminCreateProduct(payload)
         resetForm()
         await loadProducts()
         showSuccess('Thêm sản phẩm thành công.')
+        setSelectedIds([])
       }
     } catch (err) {
       setError(messageFromApiError(err, 'Lưu thất bại.'))
     }
   }
 
-  async function onDelete(id: string) {
-    if (!confirm('Xóa sản phẩm này?')) return
-    try {
-      await tosixApi.adminDeleteProduct(id)
-      if (editId === id) resetForm()
-      await loadProducts()
-    } catch (err) {
-      setError(messageFromApiError(err, 'Xóa thất bại.'))
-    }
+  function onDelete(id: string) {
+    setConfirmModal({
+      title: 'Xóa sản phẩm',
+      message: 'Bạn có chắc chắn muốn xóa sản phẩm này?',
+      onConfirm: async () => {
+        try {
+          await tosixApi.adminDeleteProduct(id)
+          if (editId === id) resetForm()
+          await loadProducts()
+          setSelectedIds([])
+        } catch (err) {
+          setError(messageFromApiError(err, 'Xóa thất bại.'))
+        }
+      }
+    })
+  }
+
+  function handleBulkHide() {
+    setConfirmModal({
+      title: 'Tắt hiển thị (Ẩn) sản phẩm',
+      message: `Bạn có chắc chắn muốn ẩn hiển thị ${selectedIds.length} sản phẩm đã chọn?`,
+      onConfirm: async () => {
+        setError(null)
+        try {
+          await tosixApi.adminBulkHideProducts(selectedIds)
+          setSelectedIds([])
+          await loadProducts()
+          showSuccess('Ẩn thành công.')
+        } catch (err) {
+          setError(messageFromApiError(err, 'Ẩn thất bại.'))
+        }
+      }
+    })
+  }
+
+  function handleBulkDelete() {
+    setConfirmModal({
+      title: 'Xóa nhiều sản phẩm',
+      message: `Bạn có chắc chắn muốn xóa ${selectedIds.length} sản phẩm đã chọn?`,
+      onConfirm: async () => {
+        setError(null)
+        try {
+          await tosixApi.adminBulkDeleteProducts(selectedIds)
+          setSelectedIds([])
+          await loadProducts()
+          showSuccess('Xóa thành công.')
+        } catch (err) {
+          setError(messageFromApiError(err, 'Xóa thất bại.'))
+        }
+      }
+    })
   }
 
   return (
@@ -316,10 +368,39 @@ export function AdminProductsPage() {
 
       {loading ? <p className="tosix-muted">Đang tải…</p> : null}
 
+      {selectedIds.length > 0 ? (
+        <div className="tosix-admin-bulk-actions">
+          <div className="tosix-admin-bulk-actions-text">
+            Đang chọn <strong>{selectedIds.length}</strong> sản phẩm
+          </div>
+          <div className="tosix-admin-bulk-actions-btns">
+            <button type="button" className="tosix-btn tosix-btn--secondary tosix-btn--sm" onClick={handleBulkHide}>
+              Ẩn các mục đã chọn
+            </button>
+            <button type="button" className="tosix-btn tosix-btn--danger tosix-btn--sm" onClick={handleBulkDelete}>
+              Xóa các mục đã chọn
+            </button>
+          </div>
+        </div>
+      ) : null}
+
       <div className="tosix-table-wrap">
         <table className="tosix-table">
           <thead>
             <tr>
+              <th style={{ width: '40px' }} onClick={(e) => e.stopPropagation()}>
+                <input
+                  type="checkbox"
+                  checked={rows.length > 0 && selectedIds.length === rows.length}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setSelectedIds(rows.map((r) => r.id))
+                    } else {
+                      setSelectedIds([])
+                    }
+                  }}
+                />
+              </th>
               <th>Ảnh</th>
               <th>Mã</th>
               <th>Tên</th>
@@ -339,6 +420,19 @@ export function AdminProductsPage() {
                   onClick={() => void startEdit(r)}
                   title={`Sửa ${r.code}`}
                 >
+                  <td onClick={(e) => e.stopPropagation()}>
+                    <input
+                      type="checkbox"
+                      checked={selectedIds.includes(r.id)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedIds((prev) => [...prev, r.id])
+                        } else {
+                          setSelectedIds((prev) => prev.filter((id) => id !== r.id))
+                        }
+                      }}
+                    />
+                  </td>
                   <td>
                     {r.imagePath ? (
                       <span className="tosix-table-thumb-wrap">
@@ -370,6 +464,38 @@ export function AdminProductsPage() {
       {!loading && rows.length === 0 ? <p className="tosix-muted">Không có sản phẩm phù hợp.</p> : null}
 
       <Pagination page={page} totalPages={totalPages} totalCount={totalCount} onPageChange={setPage} />
+
+      {confirmModal && (
+        <div className="tosix-lightbox" role="dialog" aria-modal="true">
+          <button type="button" className="tosix-lightbox-backdrop" onClick={() => setConfirmModal(null)} />
+          <div className="tosix-lightbox-dialog" style={{ width: 'min(400px, 100%)' }}>
+            <button type="button" className="tosix-lightbox-close" onClick={() => setConfirmModal(null)}>×</button>
+            <div className="tosix-lightbox-body" style={{ padding: '24px' }}>
+              <h3 className="tosix-lightbox-title" style={{ fontSize: '1.2rem', marginBottom: '12px' }}>
+                {confirmModal.title}
+              </h3>
+              <p style={{ color: 'var(--tosix-muted)', fontSize: '0.95rem', marginBottom: '24px', lineHeight: '1.5' }}>
+                {confirmModal.message}
+              </p>
+              <div className="tosix-form-actions" style={{ justifyContent: 'flex-end', marginTop: 0 }}>
+                <button type="button" className="tosix-btn tosix-btn--ghost" onClick={() => setConfirmModal(null)}>
+                  Hủy
+                </button>
+                <button
+                  type="button"
+                  className="tosix-btn tosix-btn--primary"
+                  onClick={async () => {
+                    await confirmModal.onConfirm();
+                    setConfirmModal(null);
+                  }}
+                >
+                  Xác nhận
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

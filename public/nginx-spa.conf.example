@@ -1,0 +1,18 @@
+# Ví dụ cấu hình Nginx cho VPS (copy và chỉnh server_name, root)
+# root trỏ tới thư mục chứa index.html sau khi upload dist/
+
+server {
+    listen 80;
+    server_name amberlumia.com.vn;
+    root /var/www/amberlumia;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff2)$ {
+        expires 7d;
+        add_header Cache-Control "public, immutable";
+    }
+}
